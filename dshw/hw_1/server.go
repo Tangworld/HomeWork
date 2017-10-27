@@ -12,9 +12,9 @@ import (
 
 func main() {
 	//建立socket，监听端口
-	//cip := getCurrentIp()
-	//netListen, err := net.Listen("tcp", cip+":8086")
-	netListen, err := net.Listen("tcp", "127.0.0.1:8086")
+	cip := getCurrentIp()
+	netListen, err := net.Listen("tcp", cip+":8086")
+	//netListen, err := net.Listen("tcp", "127.0.0.1:8086")
 	CheckError(err)
 	defer netListen.Close()
 
