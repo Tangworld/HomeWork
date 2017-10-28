@@ -12,10 +12,10 @@ import (
 	"strconv"
 )
 
-func sender(conn net.Conn) {
+func testSender(conn net.Conn) {
 	buffer := make([]byte, 2048)
 	//获取一个口令
-	req := authority()
+	req := testAuthority()
 	//fmt.Printf(req)
 	//发送口令
 	conn.Write([]byte(req))
@@ -40,7 +40,7 @@ func sender(conn net.Conn) {
 		//fmt.Println(end)
 		//粗略计算得到的时延值
 		delay := (end-start) / 2
-
+		//fmt.Println(delay)
 
 		//校正后的时间值
 		rTime := intTime + delay
@@ -53,12 +53,12 @@ func sender(conn net.Conn) {
 		fmt.Println("cunrrent time:")
 		fmt.Println(result)
 	}else {
+		fmt.Printf("connect denied!\n")
 		return
 	}
 }
 
 func main() {
-	getIp()
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", "172.28.42.162:8086")
 	if err != nil {
 		fmt.Printf(err.Error())
@@ -72,31 +72,17 @@ func main() {
 	}
 
 	fmt.Println("ready to get time!")
-	sender(conn)
+	testSender(conn)
 }
 
 //产生一个随机数，然后使用md5算法对这个随机数进行加密，将随机数和加密值传送给
 //服务器进行验证，若通过验证则认为是可信任客户端，可提供后续服务
-func authority() string{
+func testAuthority() string{
 	rawInt := rand.Intn(100)
 	//fmt.Printf("raw_int:::"+string(rawInt)+"\n")
 	password := md5.New()
 	password.Write([]byte(string(rawInt)))
 	result := hex.EncodeToString(password.Sum(nil))
 	//fmt.Printf("%s\n", result) // 输出加密结果
-	return string(rawInt)+" "+result
-}
-
-func getIp() string{
-	file, err := os.Open("ip.txt")
-	defer file.Close()
-	if err != nil {
-		fmt.Println(file, err)
-	}
-	buffer := make([]byte, 2048)
-
-	n, _ := file.Read(buffer)
-	ip := string(buffer[:n])
-	fmt.Println(ip)
-	return ip
+	return "3 "+result
 }
