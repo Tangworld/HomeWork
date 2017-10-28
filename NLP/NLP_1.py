@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import chardet
 
 words = []
 dic = []
